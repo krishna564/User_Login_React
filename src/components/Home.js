@@ -1,16 +1,17 @@
 import Nav from "./Nav";
-import React, {useState, Component} from 'react';
+import React, {Component} from 'react';
 import axios from "axios";
 import Profile from "./Profile";
 import EditUser from "./EditUser";
+import { connect } from "react-redux";
+import { me } from "../store/actions/UserActions";
 
 
-export default class Home extends Component {
+class Home extends Component {
 
     constructor(props){
     	super(props);
     	this.state = {
-            user:[],
             selfEditData:{
             	email:"",
             	username:"",
@@ -21,27 +22,7 @@ export default class Home extends Component {
 
 	componentDidMount(){
 
-		this.me();
-	}
-
-	me = () => {
-		const headers = {
-			'Authorization': 'bearer ' + localStorage.getItem('token'),
-		};
-
-		axios.get("http://localhost:8000/users/me", {
-			headers:headers
-		})
-			.then((response) =>{
-				if(response.status === 200){
-					this.setState({
-						user:JSON.parse(JSON.stringify(response.data))
-					});
-				}
-			})
-			.catch(function (error){
-				console.log(error);
-			})
+		this.props.me();
 	}
 
 	toggle = (email) =>{
@@ -74,7 +55,7 @@ export default class Home extends Component {
 				},
 				modal:false,
 			});
-			this.me();
+			this.props.me();
 		}).catch((error)=>{
 			alert(error.response);
 		})
@@ -82,13 +63,14 @@ export default class Home extends Component {
 
 
 	render(){
-		if (this.state.user.username) {
+		const { user } = this.props;
+		if (user.username) {
 			return(
 				<div className="Home">
 					<Nav />
-					<h2>Hi {this.state.user.username}</h2>
+					<h2>Hi {user.username}</h2>
 					<Profile
-						user = {this.state.user}
+						user = {user}
 						toggle = {this.toggle}
 					 />
 					<EditUser 
@@ -110,3 +92,11 @@ export default class Home extends Component {
 		);
 	}
 }
+
+const mapStateToProps = (state) => {
+	const { user } = state.user;
+	return {
+		user
+	};
+};
+export default connect(mapStateToProps, {me})(Home);

@@ -1,6 +1,6 @@
 import React, {useState, Component} from 'react';
 import axios from "axios";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 
 export default class Login extends Component {
 
@@ -30,7 +30,7 @@ export default class Login extends Component {
 					localStorage.setItem('token', response.data.data.token);
 					this.setState({
 						redirect:true,
-					})
+					});
 				}	
 			}).catch((error) =>{
 				console.log(error.response.data.message);

@@ -27,13 +27,15 @@ export default class List extends Component {
 			},
 			msg:"",
 			editModal: false,
+			next_page:"",
+			prev_page:"",
 		}
 	}
 	
 	componentDidMount(){
 		this.getUsers();
 	}
-	getUsers(){
+	getUsers = () => {
 		const headers = {
 			'Authorization': 'bearer ' + localStorage.getItem('token'),
 		};
@@ -44,8 +46,75 @@ export default class List extends Component {
 				this.setState({
 					users: response.data.users.data ? response.data.users.data : [],
 				});
+				if(response.data.users.current_page !== response.data.users.last_page){
+					this.setState({
+						next_page: response.data.users.current_page + 1
+					});
+				} 
+				if(response.data.users.current_page !== 1){
+					this.setState({
+						prev_page: response.data.users.current_page - 1
+					});
+				} 
+				console.log(response);
 			}
 		});
+	}
+
+	nextPage = (page) => {
+		const headers = {
+			'Authorization': 'bearer ' + localStorage.getItem('token'),
+		};
+		axios.get("http://localhost:8000/users/get/all?page=" + page,{
+			headers:headers
+		}).then((response) =>{
+			if(response.status === 200){
+				this.setState({
+					users: response.data.users.data ? response.data.users.data : [],
+				});
+				if(response.data.users.current_page !== response.data.users.last_page){
+					this.setState({
+						next_page: response.data.users.current_page + 1
+					});
+				} 
+				if(response.data.users.current_page !== 1){
+					this.setState({
+						prev_page: response.data.users.current_page - 1
+					});
+				} 
+				console.log(response);
+			}
+		}).catch((error)=>{
+			console.log(error.response);
+		})
+	}
+
+	prevPage = (page) => {
+		const headers = {
+			'Authorization': 'bearer ' + localStorage.getItem('token'),
+		};
+		axios.get("http://localhost:8000/users/get/all?page=" + page,{
+			headers:headers
+		}).then((response) =>{
+			if(response.status === 200){
+				this.setState({
+					users: response.data.users.data ? response.data.users.data : [],
+				});
+				if(response.data.users.current_page !== response.data.users.last_page){
+					this.setState({
+						next_page: response.data.users.current_page + 1
+					});
+				} 
+				if(response.data.users.current_page !== 1){
+					this.setState({
+						prev_page: response.data.users.current_page - 1
+					});
+				}
+				console.log(response);
+			}
+		}).catch((error)=>{
+			console.log(error.response);
+		})
 	}
 	
 
@@ -208,6 +277,8 @@ export default class List extends Component {
 						<tbody>{userDetails}</tbody>
 					</table>
 				 )}
+				 <button type="button" size="sm" className="btn btn-secondary button" onClick={() => this.prevPage(this.state.prev_page)} style={{float:'left'}}>Prev</button>
+				 <button type="button" size="sm" className="btn btn-primary button" onClick={() => this.nextPage(this.state.next_page)} style={{float:'left'}}>Next</button>
 			</div>
 		);
 	}

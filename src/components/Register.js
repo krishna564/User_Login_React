@@ -15,6 +15,7 @@ export default class Register extends Component {
 			},
 			msg_email:[],
 			msg_password:[],
+			msg_username:[],
 			msg:"",
 			redirect:false,
 		};
@@ -31,7 +32,7 @@ export default class Register extends Component {
 		e.preventDefault();
 		axios.post("http://localhost:8000/users/register", this.state.signupData)
 			.then((response) => {
-				if(response.data.status === 200){
+				if(response.status === 200){
 					this.setState({
 						signupData : {
 							username: "",
@@ -41,17 +42,25 @@ export default class Register extends Component {
 						},
 						redirect:true,
 					});
-				}
-				// console.log(response);	
+				}	
 			}).catch((error) => {
 				console.log(error.response);
 				if(error.response.status === 422){
-					console.log(error.response.data.email);
-					console.log(error.response.data.password);
-					this.setState({
-						msg_email:JSON.parse(JSON.stringify(error.response.data.email)),
-						msg_password:JSON.parse(JSON.stringify(error.response.data.password)),
-					});
+					if(error.response.data.username){
+						this.setState({
+							msg_username:JSON.parse(JSON.stringify(error.response.data.username)),
+						})
+					}
+					if(error.response.data.password){
+						this.setState({
+							msg_password:JSON.parse(JSON.stringify(error.response.data.password)),
+						})
+					}
+					if(error.response.data.email){
+						this.setState({
+							msg_email:JSON.parse(JSON.stringify(error.response.data.email)),
+						});
+					}
 				}
 				if (error.response.status === 409) {
 					this.setState({
@@ -98,6 +107,7 @@ export default class Register extends Component {
 			    </form>
 			    <span>{this.state.msg_email}</span>
 			    <span>{this.state.msg_password}</span>
+			    <span>{this.state.msg_username}</span>
 			    <span>{this.state.msg}</span>
 
 			</div>

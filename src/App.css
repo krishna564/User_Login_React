@@ -120,14 +120,19 @@ h1 {
 }
 .addUser{
   float: right;
-  margin-top: 10px;
   margin-right: 10px;
+  margin-top: 15px;
+  /*clear: both;*/
 }
 .forgotPassword{
   text-decoration: none;
 }
 .button{
   margin: 1px;
+}
+.button-task{
+  background-color: blue;
+  color: blue;
 }
 .height{
   height: 35px;
@@ -136,7 +141,38 @@ h1 {
   float: left;
   margin-left: 5px;
 }
+.TasksFilter{
+  float: left;
+  margin-left: 5px;
+  clear: both;
+}
+.dashboard{
+  float: left;
+  border: 1px solid transparent;
+  background-color: #f5f5f5;
+  padding: 5px;
+  margin: 10px;
+  width: 48%;
+}
+.task{
+  margin: 10px;
+  border: 1px solid transparent;
+}
+.status{
+  float: right;
+  color: green;
+}
 .profile{
   width: 30rem;
   margin: 0 auto;
+}
+.delete{
+  float: left;
+  margin-left: 5px;
+  margin-top: 15px;
+  clear: both;
+}
+.highcharts{
+  float: right;
+  width: 50%;
 }

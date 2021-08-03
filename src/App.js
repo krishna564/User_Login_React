@@ -7,6 +7,11 @@ import List from "./components/index";
 import ResetPassword from "./components/ResetPassword";
 import UpdatePassword from "./components/UpdatePassword";
 import VerifyEmail from "./components/VerifyEmail";
+import AssigneeTasks from "./components/AssigneeTasks";
+import CreatedTasks from "./components/CreatedTasks";
+import AllTasks from "./components/AllTasks";
+import Dashboard from "./components/Dashboard"
+import Notification from "./components/Notification";
 import { BrowserRouter, Route } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
@@ -25,6 +30,11 @@ function App() {
           <Route path="/email" component = {ResetPassword} />
           <Route path="/reset" component = {UpdatePassword} />
           <Route path="/verify" component = {VerifyEmail} />
+          <Route path="/atasks" component = {AssigneeTasks} />
+          <Route path="/ctasks" component = {CreatedTasks} />
+          <Route path="/alltasks" component = {AllTasks} />
+          <Route path="/dashboard" component = {Dashboard} />
+          <Route path="/notification" component = {Notification} />
         </main>
       </BrowserRouter>
     </div>
