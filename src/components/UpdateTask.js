@@ -10,19 +10,19 @@ const UpdateTask = (props) => {
         <ModalBody>
           <FormGroup>
             <Label htmlFor="title">Title</Label>
-            <Input id="title" name="title" onChange={(e)=>props.data.title = e.target.value} />            
+            <Input id="title" name="title" value={props.data.title} onChange={(e) => props.onChangeHandler(e)} />            
           </FormGroup>
           <FormGroup>
             <Label htmlFor="description">Description</Label>
-            <textarea id="description" name="description" className="form-control" rows="5" onChange={(e)=>props.data.description = e.target.value}></textarea>
+            <textarea id="description" name="description" className="form-control" rows="5" value={props.data.description} onChange={(e) => props.onChangeHandler(e)}></textarea>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="date">Due_Date</Label>
-            <Input type="date" id="date" name="date" onChange={(e)=>props.data.due_date = e.target.value} />            
+            <Input type="date" id="date" name="date" value={props.data.due_date} onChange={(e) => props.onChangeHandler(e)} />            
           </FormGroup>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={() => props.update()} toggle={props.toggle}>Update</Button>
+          <Button color="primary" onClick={() => {props.update(); props.loading()}} toggle={props.toggle}>Update</Button>
           <Button color="secondary" onClick={props.toggle}>Cancel</Button>
         </ModalFooter>
       </Modal>

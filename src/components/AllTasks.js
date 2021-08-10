@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import TasksFilter from "./TasksFilter";
 import Nav from "./Nav";
+import { Redirect } from "react-router-dom";
 
 export default class AllTasks extends Component {
 
@@ -9,14 +10,8 @@ export default class AllTasks extends Component {
 		super(props);
 		this.state={
 			tasksData: [],
-			tasksFilter: {
-				method: "",
-				value: "",
-			},
-			tasksFilterbyDate:{
-				to:"",
-				from:"",
-			},
+			tasksFilter: {},
+			isLoading:true,
 			direction:false,
 		};
 	}
@@ -34,6 +29,7 @@ export default class AllTasks extends Component {
 		}).then((response)=>{
 			this.setState({
 				tasksData : response.data.tasks ? response.data.tasks : [],
+				isLoading:false,
 			});
 		}).catch((error)=>{
 			alert(error);
@@ -47,27 +43,13 @@ export default class AllTasks extends Component {
 	}
 
 	filterTasks = (e) => {
+		console.log(this.state.tasksFilter);
 		e.preventDefault();
 		const config = {
 			headers: {'Authorization': 'bearer ' + localStorage.getItem('token')},
 			params:this.state.tasksFilter
 		};
-		axios.get("http://localhost:8000/tasks/filter",config).then((response)=>{
-			this.setState({
-				tasksData : response.data.tasks ? response.data.tasks : [],
-			});
-		}).catch((error)=>{
-			console.log(error.response);
-		})
-	}
-
-	filterTasksbyDate = (e, data) => {
-		e.preventDefault();
-		const config = {
-			headers: {'Authorization': 'bearer ' + localStorage.getItem('token')},
-			params:data
-		};
-		axios.get("http://localhost:8000/tasks/filterdate",config).then((response)=>{
+		axios.get("http://localhost:8000/tasks/multifilter",config).then((response)=>{
 			this.setState({
 				tasksData : response.data.tasks ? response.data.tasks : [],
 			});
@@ -96,6 +78,9 @@ export default class AllTasks extends Component {
 	}
 
 	render(){
+		if(!localStorage.getItem('token')){
+			return (<Redirect to="/samplelogin" />)
+		}
 		const { tasksData } = this.state;
 		let details = [];
 		if(tasksData.length){
@@ -115,40 +100,44 @@ export default class AllTasks extends Component {
 		return(
 			<div className="AllTasks">
 				<Nav />
-				<TasksFilter 
-					onChangeHandler = {this.onChangeHandler}
-					filterTasks = {this.filterTasks}
-					filterTasksbyDate = {this.filterTasksbyDate}
-					data = {this.state.tasksFilterbyDate}
-					filterData = {this.state.tasksFilter}
-				/>
-				<table className="table">
-					<thead>
-						<tr>
-							<th scope="col">
-								<button type="button" className="btn" onClick={() => this.sortItems('title')}>Title</button>
-							</th>
-							<th scope="col">
-								<button type="button" className="btn" onClick={() => this.sortItems('description')}>Description</button>
-							</th>
-							<th scope="col">
-								<button type="button" className="btn" onClick={() => this.sortItems('due_date')}>Due_Date</button>
-							</th>
-							<th scope="col">
-								<button type="button" className="btn" onClick={() => this.sortItems('status')}>Status</button>
-							</th>
-							<th scope="col">
-								<button type="button" className="btn" onClick={() => this.sortItems('assignee')}>Assignee</button>
-							</th>
-							<th scope="col">
-								<button type="button" className="btn" onClick={() => this.sortItems('created_by')}>Created_by</button>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						{details}
-					</tbody>
-				</table>
+				{this.state.isLoading ? (
+					<h3>Loading...</h3>
+				):(
+					<>
+						<TasksFilter 
+							onChangeHandler = {this.onChangeHandler}
+							filterTasks = {this.filterTasks}
+							filterData = {this.state.tasksFilter}
+						/>
+						<table className="table">
+							<thead>
+								<tr>
+									<th scope="col">
+										<button type="button" className="btn" onClick={() => this.sortItems('title')}>Title</button>
+									</th>
+									<th scope="col">
+										<button type="button" className="btn" onClick={() => this.sortItems('description')}>Description</button>
+									</th>
+									<th scope="col">
+										<button type="button" className="btn" onClick={() => this.sortItems('due_date')}>Due_Date</button>
+									</th>
+									<th scope="col">
+										<button type="button" className="btn" onClick={() => this.sortItems('status')}>Status</button>
+									</th>
+									<th scope="col">
+										<button type="button" className="btn" onClick={() => this.sortItems('assignee')}>Assignee</button>
+									</th>
+									<th scope="col">
+										<button type="button" className="btn" onClick={() => this.sortItems('created_by')}>Created_by</button>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								{details}
+							</tbody>
+						</table>
+					</>
+				)}
 			</div>
 		);
 	}

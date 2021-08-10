@@ -2,8 +2,23 @@ import React, {Component} from "react";
 import Nav from "./Nav";
 import Charts from "./HighChart";
 import store from "../store/Store";
+import {Redirect} from "react-router-dom";
 
 export default class Dashboard extends Component{
+
+	constructor(props){
+		super(props);
+		this.state={
+			redirect:false,
+		}
+	}
+
+	setRedirect = (e) => {
+		e.preventDefault();
+		this.setState({
+			redirect:true,
+		})
+	}
 
 	render(){
 		var today = new Date();
@@ -44,6 +59,9 @@ export default class Dashboard extends Component{
 				);
 			})
 		}
+		if(this.state.redirect){
+			return(<Redirect to="/atasks" />)
+		}
 		return(
 			<>
 				<Nav />
@@ -53,7 +71,7 @@ export default class Dashboard extends Component{
 					completed = {completed}
 					in_progress = {in_progress}
 				/>
-				<div className="dashboard">	
+				<div className="dashboard" onClick={this.setRedirect}>	
 					{tasks}
 				</div>
 			</>

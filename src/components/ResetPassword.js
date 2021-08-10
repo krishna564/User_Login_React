@@ -45,13 +45,13 @@ export default class ResetPassword extends Component{
 				<form className="form-signin">
 		        	<h3>Reset Your Password</h3>
 			        <div className="form-label-group">
+			          <label htmlFor="inputEmail">Email address</label>
 			          <input type="email" name="email" id="inputEmail" className="form-control" placeholder="Email address" required 
 			           onChange={(e)=>{this.setState({data: {email: e.target.value}})}} />
-			          <label htmlFor="inputEmail">Email address</label>
 			        </div>
 
 			      <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={this.submitHandler}>Reset</button>
-			      <p> Don't have account?<Link to="/register" className="ml-4 link"> Register</Link></p>
+			      <p> Don't have account?<Link to="/sampleregister" className="ml-4 link"> Register</Link></p>
 			    </form>
 			    <span>{this.state.msg}</span>
 			</div>

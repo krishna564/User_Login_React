@@ -11,7 +11,9 @@ function Charts(props) {
 	  title: {
 	    text: 'Performance'
 	  },
-	  
+	  credits: {
+	  	enabled: false,
+	  },
 	  series: [
 	    {
 	      data: [

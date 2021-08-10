@@ -7,6 +7,7 @@ import UpadateTask from "./UpdateTask";
 import CreateTask from "./CreateTask";
 import store from "../store/Store"
 import TasksFilter from "./TasksFilter";
+import { Redirect } from "react-router-dom";
 
 class CreatedTasks extends Component {
 
@@ -18,6 +19,9 @@ class CreatedTasks extends Component {
 				id:"",
 			},
 			modalAdd:false,
+			isLoading:true,
+			set_created:false,
+			created_tasks:[],
 			createData:{
 				title:"",
 				description:"",
@@ -37,6 +41,16 @@ class CreatedTasks extends Component {
 		this.props.createdTasks();
 	}
 
+	componentDidUpdate(){
+		if(!this.state.set_created){
+			this.setState({
+				created_tasks:store.getState().created_tasks,
+				set_created:true,
+				isLoading:false,
+			})
+		}
+	}
+
 	delete = (id) => {
 		const headers = {
 			'Authorization': 'bearer ' + localStorage.getItem('token'),
@@ -51,11 +65,14 @@ class CreatedTasks extends Component {
 		});		
 	}
 
-	toggle = (id) => {
+	toggle = (id,title,description,due_date) => {
 		this.setState({
 			modal: !this.state.modal,
 			editData:{
 				id:id,
+				title:title,
+				description:description,
+				due_date:due_date,
 			}
 		})
 	}
@@ -73,9 +90,18 @@ class CreatedTasks extends Component {
 			headers:headers
 		}).then((response)=>{
 			this.props.createdTasks();
+			this.setState({
+				isLoading:false,
+			})
 		}).catch((error)=>{
 			alert(error.response);
 		});
+	}
+
+	updateChangeHandler = (e) => {
+		const {editData} = this.state;
+		editData[e.target.name] = e.target.value;
+		this.setState({editData});
 	}
 
 	createTask = () => {
@@ -122,7 +148,16 @@ class CreatedTasks extends Component {
 		})
 	}
 
+	setIsLoading = () => {
+		this.setState({
+			isLoading:true
+		})
+	}
+
 	render(){
+		if(!localStorage.getItem('token')){
+			return (<Redirect to="/samplelogin" />)
+		}
 		const {created_tasks} = this.props;
 		let details = [];
 		if(created_tasks.length){
@@ -135,7 +170,7 @@ class CreatedTasks extends Component {
 						<td scope="row">{task.due_date}</td>
 						<td scope="row">{task.status}</td>
 						<td scope="row">
-							<button type="button" size="sm" className="btn btn-primary" onClick={()=>this.toggle(task.id)}>Edit</button>{" "}
+							<button type="button" size="sm" className="btn btn-primary" onClick={()=>this.toggle(task.id,task.title,task.description,task.due_date)}>Edit</button>{" "}
 							<button type="button" size="sm" className="btn btn-danger" onClick={()=>this.delete(task.id)}>Delete</button>
 						</td>
 					</tr>
@@ -145,44 +180,45 @@ class CreatedTasks extends Component {
 		return(
 			<div className="assignee">
 				<Nav />
-				<TasksFilter 
-					onChangeHandler = {this.onChangeHandler}
-					filterTasks = {this.props.filterTasks}
-					filterTasksbyDate = {this.filterTasksbyDate}
-					data = {this.state.tasksFilterbyDate}
-					filterData = {this.state.tasksFilter}
-				/>
-				<div>
-					<button type="button" size="sm" className="btn btn-danger delete" onClick={this.multiDelete}>Delete Selected</button>
-				</div>
-				<CreateTask 
-					modal = {this.state.modalAdd}
-					create = {this.createTask}
-					toggle = {this.toggleAdd}
-					data = {this.state.createData}
-				/>
-				<UpadateTask 
-					modal = {this.state.modal}
-					update = {this.edit}
-					data = {this.state.editData}
-					toggle = {this.toggle}
-				/>
-				{created_tasks.length===0 ? <h3>No Tasks for you</h3> : (
-					<table className="table">
-						<thead>
-							<tr>
-								<th scope="col"></th>
-								<th scope="col">Title</th>
-								<th scope="col">Description</th>
-								<th scope="col">Due_Date</th>
-								<th scope="col">Status</th>
-								<th scope="col">Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							{details}
-						</tbody>
-					</table>
+				{this.state.isLoading ? (
+					<h3>Loading...</h3>
+				): (
+					<>
+						<div>
+							<button type="button" size="sm" className="btn btn-danger delete" onClick={this.multiDelete}>Delete Selected</button>
+						</div>
+						<CreateTask 
+							modal = {this.state.modalAdd}
+							create = {this.createTask}
+							toggle = {this.toggleAdd}
+							data = {this.state.createData}
+						/>
+						<UpadateTask 
+							modal = {this.state.modal}
+							update = {this.edit}
+							data = {this.state.editData}
+							toggle = {this.toggle}
+							onChangeHandler = {this.updateChangeHandler}
+							loading = {this.setIsLoading}
+						/>
+						{created_tasks.length===0 ? <h3>No Tasks for you</h3> : (
+							<table className="table">
+								<thead>
+									<tr>
+										<th scope="col"></th>
+										<th scope="col">Title</th>
+										<th scope="col">Description</th>
+										<th scope="col">Due_Date</th>
+										<th scope="col">Status</th>
+										<th scope="col">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									{details}
+								</tbody>
+							</table>
+						)}
+					</>
 				)}
 				
 			</div>

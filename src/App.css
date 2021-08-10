@@ -51,7 +51,6 @@ body {
 h1 {
   padding-top: 10px;
 }
-
 .form-signin {
   width: 100%;
   max-width: 420px;
@@ -59,61 +58,19 @@ h1 {
   margin: 0 auto;
   background-color: #f5f5f5;
 }
-
-.form-label-group {
-  position: relative;
-  margin-bottom: 1rem;
+label {
+  font-weight: bold;
 }
-
-.form-label-group > input,
-.form-label-group > label {
-  padding: var(--input-padding-y) var(--input-padding-x);
-}
-
-.form-label-group > label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
+.input{
   width: 100%;
-  margin-bottom: 0; /* Override default `<label>` margin */
-  line-height: 1.5;
-  color: #495057;
-  border: 1px solid transparent;
-  border-radius: .25rem;
-  transition: all .1s ease-in-out;
+  border: 1px solid grey;
 }
-
-.form-label-group input::-webkit-input-placeholder {
-  color: transparent;
+.error{
+  color: red;
+  margin: 5px;
 }
-
-.form-label-group input:-ms-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::-ms-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::-moz-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::placeholder {
-  color: transparent;
-}
-
-.form-label-group input:not(:placeholder-shown) {
-  padding-top: calc(var(--input-padding-y) + var(--input-padding-y) * (2 / 3));
-  padding-bottom: calc(var(--input-padding-y) / 3);
-}
-
-.form-label-group input:not(:placeholder-shown) ~ label {
-  padding-top: calc(var(--input-padding-y) / 3);
-  padding-bottom: calc(var(--input-padding-y) / 3);
-  font-size: 12px;
-  color: #777;
+.form-label-group {
+  margin: 5px;
 }
 .link {
   text-decoration: none;
@@ -162,9 +119,31 @@ h1 {
   float: right;
   color: green;
 }
-.profile{
-  width: 30rem;
-  margin: 0 auto;
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+}
+.title{
+  color: grey;
+  font-size: 25px;
+}
+.card-button{
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+.card-button button:hover {
+  opacity: 0.7;
 }
 .delete{
   float: left;

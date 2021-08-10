@@ -1,21 +1,14 @@
+import Moment, {moment} from "react-moment";
 const Profile = (props) => {
 	return(
 		<div className="profile">
+			<h1>User Profile Card</h1>
 			<div className="card">
-	            <div className="card-header">
-	                <h4>Profile</h4>
-	            </div>
-	            <div className="card-body">
-	                <ul className="list-group list-group-flush">
-	                	<li className="list-group-item"><h5>Email: {props.user.email}</h5></li>
-	                	<li className="list-group-item"><h5>Username: {props.user.username}</h5></li>
-	                	<li className="list-group-item"><h5>Role: {props.user.roles}</h5></li>
-	                	<li className="list-group-item"><h5>Created At: {props.user.created_at}</h5></li>
-	                </ul>
-	            </div>
-	            <div className="card-footer">
-	            	<button className="btn btn-primary" style={{ float: 'left' }} onClick={()=>{props.toggle(props.user.email)}}> Change</button>
-	            </div>
+				<h1>{props.user.username}</h1>
+				<p className="title">{props.user.email}</p>
+				<p className="title">{props.user.roles}</p>
+				<p className="title">Created At: <Moment date={props.user.created_at} /> </p>
+				<button className="card-button" onClick={()=>{props.toggle(props.user.email, props.user.username)}}> Update</button>
 			</div>
 		</div>
 	);

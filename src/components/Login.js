@@ -49,19 +49,22 @@ export default class Login extends Component {
 		if(this.state.redirect){
 			return(<Redirect to="/" exact />);
 		}
+		// if(localStorage.getItem('token')){
+		// 	return(<Redirect to="/" exact />);
+		// }
 		return(
 			<div className="container">
 
 		      	<form className="form-signin" onSubmit={this.submitHandler}>
 		        	<h1> Login </h1>
 			        <div className="form-label-group">
-			          <input type="email" name="email" id="inputEmail" className="form-control" placeholder="Email address" required onChange={this.onChangeHandler} />
 			          <label htmlFor="inputEmail">Email address</label>
+			          <input type="email" name="email" id="inputEmail" className="form-control" placeholder="Email address" required onChange={this.onChangeHandler} />			      
 			        </div>
 
 			        <div className="form-label-group">
-			          <input type="password" name="password" id="inputPassword" className="form-control" placeholder="Password" required onChange={this.onChangeHandler} />
 			          <label htmlFor="inputPassword">Password</label>
+			          <input type="password" name="password" id="inputPassword" className="form-control" placeholder="Password" required onChange={this.onChangeHandler} />			       
 			        </div>
 			      <button className="btn btn-lg btn-primary btn-block button" type="submit">Log in</button>
 			      <p> Don't have account? <Link to="/register" className="ml-4 link"> register </Link> or <Link to="/email" className="forgotPassword">forgot password?</Link></p>

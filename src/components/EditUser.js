@@ -10,7 +10,7 @@ const EditUser = (props) => {
         <ModalBody>
           <FormGroup>
             <Label htmlFor="username">User Name</Label>
-            <Input id="username" type="text" name="username" onChange={(e)=>props.data.username = e.target.value} />
+            <Input id="username" type="text" name="username" value = {props.data.username} onChange={(e) => props.onChangeHandler(e)} />
           </FormGroup>
         </ModalBody>
         <ModalFooter>

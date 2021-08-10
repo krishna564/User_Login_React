@@ -37,9 +37,9 @@ export default class VerifyEmail extends Component{
 			<form className="form-signin">
 	        	<h3>Verify Email</h3>
 		        <div className="form-label-group">
+		          <label htmlFor="inputToken">Email Token</label>
 		          <input type="text" name="token" id="inputToken" className="form-control" placeholder="Email Token" required 
 		           onChange={(e)=>{this.setState({token: e.target.value})}} />
-		          <label htmlFor="inputToken">Email Token</label>
 		        </div>
 
 		      <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={this.submitHandler}>Submit</button>

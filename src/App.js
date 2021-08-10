@@ -12,6 +12,8 @@ import CreatedTasks from "./components/CreatedTasks";
 import AllTasks from "./components/AllTasks";
 import Dashboard from "./components/Dashboard"
 import Notification from "./components/Notification";
+import SampleLogin from "./components/SampleLogin";
+import SampleRegister from "./components/SampleRegister";
 import { BrowserRouter, Route } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
@@ -19,11 +21,21 @@ import axios from "axios";
 
 function App() {
 
+  const [isLogged, setIsLogged] = useState(false);
+
+  const updateIsLogged = () => {
+    setIsLogged(true);
+  }
+
+  const removeIsLogged = () => {
+    setIsLogged(false);
+  }
+
   return (
     <div className="App">
       <BrowserRouter>
         <main>
-          <Route path="/" exact component = {() => <Home />} />
+          <Route path="/" exact component = {() => <Home remove={removeIsLogged} />} />
           <Route path="/login"  component = {Login} />
           <Route path="/register"  component = {Register} />
           <Route path="/list" component = {List} />
@@ -35,6 +47,8 @@ function App() {
           <Route path="/alltasks" component = {AllTasks} />
           <Route path="/dashboard" component = {Dashboard} />
           <Route path="/notification" component = {Notification} />
+          <Route path="/samplelogin" component = {() => <SampleLogin isLogged={isLogged} update = {updateIsLogged} />} />
+          <Route path="/sampleregister" component = {SampleRegister} />
         </main>
       </BrowserRouter>
     </div>

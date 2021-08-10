@@ -80,27 +80,27 @@ export default class Register extends Component {
 				<form className="form-signin">
 		        	<h1>Register</h1>
 		        	<div className="form-label-group">
+		        	  <label htmlFor="inputUserName">User Name</label>
 			          <input type="text" name="username" id="inputUserName" className="form-control" placeholder="User Name" required 
-			           onChange={this.onChangeHandler} />
-			          <label htmlFor="inputUserName">User Name</label>
+			           onChange={this.onChangeHandler} />			          
 			        </div>
 
 			        <div className="form-label-group">
+			          <label htmlFor="inputEmail">Email address</label>
 			          <input type="email" name="email" id="inputEmail" className="form-control" placeholder="Email address" required 
 			           onChange={this.onChangeHandler} />
-			          <label htmlFor="inputEmail">Email address</label>
 			        </div>
 
 			        <div className="form-label-group">
+			          <label htmlFor="inputPassword">Password</label>
 			          <input type="password" name="password" id="inputPassword" className="form-control" placeholder="Password" required
 			           onChange={this.onChangeHandler} />
-			          <label htmlFor="inputPassword">Password</label>
 			        </div>
 
 			        <div className="form-label-group">
-			          <input type="password" name="password_confirmation" id="inputPasswordConfirmation" className="form-control" placeholder="Re-Password" required
+			          <label htmlFor="inputPasswordConfirmation">Password Confirm</label>
+			          <input type="password" name="password_confirmation" id="inputPasswordConfirmation" className="form-control" placeholder="Password Confirm" required
 			           onChange={this.onChangeHandler} />
-			          <label htmlFor="inputPasswordConfirmation">Re-Password</label>
 			        </div>
 			      <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={this.submitHandler}>Register</button>
 			      <p> already a member?<Link to="/login" className="ml-4 link"> Log in </Link></p>

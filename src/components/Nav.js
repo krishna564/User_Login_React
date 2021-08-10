@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import store from "../store/Store";
+import { useState } from "react";
 
-function Nav() {
+function Nav(props) {
+
+	const [log, setLog] = useState(true);
 
 	const logout = () =>{
 		const headers = {
@@ -12,6 +15,7 @@ function Nav() {
 			headers:headers
 		}).then((response)=>{
 			localStorage.removeItem('token');
+			setLog(false);
 		}).catch((error)=>{
 			console.log(error.response);
 		});
@@ -23,6 +27,9 @@ function Nav() {
 		                <Link to="/alltasks" className="nav-link">All Tasks</Link>
 		            </ul>)
 	}
+	if(!log){
+		return (<Redirect to="/samplelogin" />);
+ 	}
 	return(
 		<nav className="navbar navbar-expand-md navbar-dark bg-dark mb-4">
 		  <div className="container-fluid">
@@ -45,7 +52,7 @@ function Nav() {
 		            </ul>
 		            <ul className="navbar-nav">
 		                <li className="nav-item">
-		                    <Link to="/login" className="nav-link" onClick={logout}> Logout </Link>
+		                    <button className="btn btn-dark" onClick={logout}> Logout </button>
 		                </li>
 		            </ul>
 		        </div>

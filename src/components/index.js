@@ -5,12 +5,13 @@ import AddUser from "./addUser";
 import EditUser from "./EditUser";
 import Nav from "./Nav";
 import Filter from "./Filter";
-
+import { Redirect } from "react-router-dom";
 
 export default class List extends Component {
 	constructor(props){
 		super(props);
 		this.state ={
+			isLoading:true,
 			users:[],
 			newUserData:{
 				email:"",
@@ -43,6 +44,7 @@ export default class List extends Component {
 			headers:headers
 		}).then((response) => {
 			if(response.status === 200){
+				this.setState({isLoading:false});
 				this.setState({
 					users: response.data.users.data ? response.data.users.data : [],
 				});
@@ -170,12 +172,18 @@ export default class List extends Component {
 		});
 	}
 
-	toggleEdit = (email) => {
+	editChangeHandler = (e) => {
+		const {editUserData} = this.state;
+		editUserData[e.target.name] = e.target.value;
+		this.setState({editUserData});
+	}
+
+	toggleEdit = (email,username) => {
 		this.setState({
 			editModal: !this.state.editModal,
 			editUserData:{
 				email:email,
-				username:"",
+				username:username,
 			}
 		});
 	}
@@ -220,6 +228,9 @@ export default class List extends Component {
 	}
 
 	render(){
+		if(!localStorage.getItem('token')){
+			return (<Redirect to="/samplelogin" />)
+		}
 		const { users } = this.state;
 		let userDetails = [];
 		if(users.length){
@@ -230,7 +241,7 @@ export default class List extends Component {
 						<td>{user.email}</td>
 						<td>{user.username}</td>
 						<td>
-							<button type="button" size="sm" className="btn btn-success button" onClick={() => this.toggleEdit(user.email)}>Edit</button>
+							<button type="button" size="sm" className="btn btn-success button" onClick={() => this.toggleEdit(user.email, user.username)}>Edit</button>
 			                <button type="button" size="sm" className="btn btn-danger button" onClick={() => this.delete(user.id)}>Delete</button>
 						</td>
 					</tr>
@@ -243,42 +254,48 @@ export default class List extends Component {
 
 				<Nav />
 
-				<Filter 
-					onChangeHandler = {this.onFilterChangeHandler}
-					data = {this.filterData}
-					filerUser = {this.filterUser}
-				/>
+				{this.state.isLoading ? (
+					<h3>Loading....</h3>
+				): (
+				<>
+					<Filter 
+						onChangeHandler = {this.onFilterChangeHandler}
+						data = {this.filterData}
+						filerUser = {this.filterUser}
+					/>
 				
-				<AddUser
-					addNewUser = {this.addNewUser}
-					newUserData = {this.state.newUserData}
-				 />
+					<AddUser
+						addNewUser = {this.addNewUser}
+						newUserData = {this.state.newUserData}
+					 />
 
-				 <EditUser
-					EditUser = {this.EditUser}
-					data = {this.state.editUserData}
-					toggle = {this.toggleEdit}
-					modal = {this.state.editModal}
-				 />
+					 <EditUser
+						EditUser = {this.EditUser}
+						data = {this.state.editUserData}
+						toggle = {this.toggleEdit}
+						modal = {this.state.editModal}
+						onChangeHandler = {this.editChangeHandler}
+					 />
 
-				 <span>{this.state.msg}</span>
-				 {users.length === 0 ? (
-				 	<h3>No Users </h3>
-				 ) : (
-				 	<table className="table table-stripped">
-						<thead>
-							<tr>
-								<th scope="col">id</th>
-								<th scope="col">Email</th>
-								<th scope="col">Username</th>
-								<th scope="col">Actions</th>
-							</tr>
-						</thead>
-						<tbody>{userDetails}</tbody>
-					</table>
-				 )}
-				 <button type="button" size="sm" className="btn btn-secondary button" onClick={() => this.prevPage(this.state.prev_page)} style={{float:'left'}}>Prev</button>
-				 <button type="button" size="sm" className="btn btn-primary button" onClick={() => this.nextPage(this.state.next_page)} style={{float:'left'}}>Next</button>
+					 {users.length === 0 ? (
+					 	<h3>No Users </h3>
+					 ) : (
+					 	<table className="table table-stripped">
+							<thead>
+								<tr>
+									<th scope="col">id</th>
+									<th scope="col">Email</th>
+									<th scope="col">Username</th>
+									<th scope="col">Actions</th>
+								</tr>
+							</thead>
+							<tbody>{userDetails}</tbody>
+						</table>
+					 )}
+					 <button type="button" size="sm" className="btn btn-secondary button" onClick={() => this.prevPage(this.state.prev_page)} style={{float:'left'}}>Prev</button>
+					 <button type="button" size="sm" className="btn btn-primary button" onClick={() => this.nextPage(this.state.next_page)} style={{float:'left'}}>Next</button>
+				</>
+				)}
 			</div>
 		);
 	}
