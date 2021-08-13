@@ -28,7 +28,7 @@ export default class ResetPassword extends Component{
 			});
 		}).catch((error)=>{
 			if(error.response.status === 400){
-				this.setState({msg:"Invalid Email"});
+				this.setState({msg:"Email Doesn't exists"});
 			}
 			if(error.response.status === 422){
 				this.setState({msg:JSON.parse(JSON.stringify(error.response.data.email))})

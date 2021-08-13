@@ -6,6 +6,7 @@ import EditUser from "./EditUser";
 import { connect } from "react-redux";
 import { me } from "../store/actions/UserActions";
 import { Redirect } from "react-router-dom";
+import Pusher from "pusher-js";
 
 class Home extends Component {
 
@@ -21,7 +22,6 @@ class Home extends Component {
     }
 
 	componentDidMount(){
-
 		this.props.me();
 	}
 
@@ -45,7 +45,6 @@ class Home extends Component {
 		const headers = {
 			'Authorization': 'bearer ' + localStorage.getItem('token'),
 		};
-		// console.log(this.state.selfEditData);
 		axios.put("http://localhost:8000/users/selfedit", this.state.selfEditData,{
 			headers:headers
 		}).then((response) => {
@@ -67,6 +66,7 @@ class Home extends Component {
 		if(!localStorage.getItem('token')){
 			return (<Redirect to="/samplelogin" />)
 		}
+
 		const { user } = this.props;
 		if (user.username) {
 			return(

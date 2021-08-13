@@ -5,7 +5,7 @@ const UpdateTask = (props) => {
 
   return (
     <div className="addUser">
-      <button className="btn btn-primary" onClick={()=>props.toggle()}>Create Task</button>
+      <button className="btn btn-primary" onClick={()=>{props.toggle(); props.change()}}>Create Task</button>
       <Modal isOpen={props.modal} toggle={props.toggle}>
         <ModalHeader toggle={props.toggle}>Update Status</ModalHeader>
         <ModalBody>
@@ -27,7 +27,7 @@ const UpdateTask = (props) => {
           </FormGroup>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={() => props.create()} toggle={props.toggle}>Create</Button>
+          <Button color="primary" onClick={() => {props.create(); props.loading()}} toggle={props.toggle}>Create</Button>
           <Button color="secondary" onClick={props.toggle}>Cancel</Button>
         </ModalFooter>
       </Modal>

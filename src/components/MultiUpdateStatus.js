@@ -20,7 +20,7 @@ const MultiUpdateStatus = (props) => {
           </FormGroup>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={() => {props.update(); props.loading()}} toggle={props.toggle}>Update</Button>
+          <Button color="primary" onClick={() => {props.update();}} toggle={props.toggle}>Update</Button>
           <Button color="secondary" onClick={props.toggle}>Cancel</Button>
         </ModalFooter>
       </Modal>

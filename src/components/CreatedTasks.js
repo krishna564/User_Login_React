@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { createdTasks, filterTasks } from "../store/actions/UserActions";
 import UpadateTask from "./UpdateTask";
 import CreateTask from "./CreateTask";
-import store from "../store/Store"
+import store from "../store/Store";
 import TasksFilter from "./TasksFilter";
 import { Redirect } from "react-router-dom";
 
@@ -34,6 +34,10 @@ class CreatedTasks extends Component {
 				type:'created_by',
 			},
 			multiDelete:[],
+			change:false,
+			errors_create: "",
+			errors_delete:"",
+			errors_edit:"",
 		}
 	}
 
@@ -49,6 +53,14 @@ class CreatedTasks extends Component {
 				isLoading:false,
 			})
 		}
+		if (this.state.change) {
+			this.setState({
+				errors_create:"",
+				errors_edit:"",
+				errors_delete:"",
+				change:false,
+			});
+		}
 	}
 
 	delete = (id) => {
@@ -61,7 +73,14 @@ class CreatedTasks extends Component {
 			alert("task deleted");
 			this.props.createdTasks();
 		}).catch((error)=>{
-			alert(error.response);
+			this.setState({
+				isLoading:false,
+			})
+			if (error.response.status===401) {
+				this.setState({
+					errors_delete:"Not authorized",
+				});
+			}
 		});		
 	}
 
@@ -94,7 +113,14 @@ class CreatedTasks extends Component {
 				isLoading:false,
 			})
 		}).catch((error)=>{
-			alert(error.response);
+			this.setState({
+				isLoading:false,
+			})
+			if (error.response.status===401) {
+				this.setState({
+					errors_edit:"Not authorized",
+				});
+			}
 		});
 	}
 
@@ -112,8 +138,23 @@ class CreatedTasks extends Component {
 			headers:headers
 		}).then((response)=>{
 			this.props.createdTasks();
+			this.setState({
+				isLoading:false,
+			});
 		}).catch((error)=>{
-			alert(error.response);
+			this.setState({
+				isLoading:false,
+			})
+			if (error.response.status === 422) {
+				this.setState({
+					errors_create: "Fill all the required fields",
+				})
+			}
+			if (error.response.status === 404) {
+				this.setState({
+					errors_create:"Assignee not found"
+				})
+			}
 		});
 	}
 
@@ -154,12 +195,24 @@ class CreatedTasks extends Component {
 		})
 	}
 
+	setChange = () => {
+		this.setState({
+			change:true,
+		})
+	}
+
 	render(){
 		if(!localStorage.getItem('token')){
 			return (<Redirect to="/samplelogin" />)
 		}
 		const {created_tasks} = this.props;
 		let details = [];
+		let deleteButton = [];
+		if(this.state.multiDelete.length){
+			deleteButton = (<div>
+							<button type="button" size="sm" className="btn btn-danger delete" onClick={()=>this.multiDelete}>Delete Selected</button>
+						</div>);
+		}
 		if(created_tasks.length){
 			details = created_tasks.map((task)=>{
 				return(
@@ -170,8 +223,8 @@ class CreatedTasks extends Component {
 						<td scope="row">{task.due_date}</td>
 						<td scope="row">{task.status}</td>
 						<td scope="row">
-							<button type="button" size="sm" className="btn btn-primary" onClick={()=>this.toggle(task.id,task.title,task.description,task.due_date)}>Edit</button>{" "}
-							<button type="button" size="sm" className="btn btn-danger" onClick={()=>this.delete(task.id)}>Delete</button>
+							<button type="button" size="sm" className="btn btn-primary" onClick={()=>{this.toggle(task.id,task.title,task.description,task.due_date);this.setChange()}}>Edit</button>{" "}
+							<button type="button" size="sm" className="btn btn-danger" onClick={()=>{this.delete(task.id); this.setChange()}}>Delete</button>
 						</td>
 					</tr>
 				);
@@ -184,15 +237,19 @@ class CreatedTasks extends Component {
 					<h3>Loading...</h3>
 				): (
 					<>
-						<div>
-							<button type="button" size="sm" className="btn btn-danger delete" onClick={this.multiDelete}>Delete Selected</button>
-						</div>
+						{deleteButton}
+						{this.state.errors_create ? <span className="create_error">{this.state.errors_create}</span> : <></>}
+						{this.state.errors_delete ? <span className="create_error">{this.state.errors_create}</span> : <></>}
+						{this.state.errors_edit ? <span className="create_error">{this.state.errors_create}</span> : <></>}
 						<CreateTask 
 							modal = {this.state.modalAdd}
 							create = {this.createTask}
 							toggle = {this.toggleAdd}
 							data = {this.state.createData}
+							loading = {this.setIsLoading}
+							change = {this.setChange}
 						/>
+
 						<UpadateTask 
 							modal = {this.state.modal}
 							update = {this.edit}

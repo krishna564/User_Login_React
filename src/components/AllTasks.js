@@ -52,9 +52,16 @@ export default class AllTasks extends Component {
 		axios.get("http://localhost:8000/tasks/multifilter",config).then((response)=>{
 			this.setState({
 				tasksData : response.data.tasks ? response.data.tasks : [],
+				isLoading : false,
 			});
 		}).catch((error)=>{
 			console.log(error.response);
+		})
+	}
+
+	setIsLoading = () => {
+		this.setState({
+			isLoading:true
 		})
 	}
 
@@ -108,6 +115,7 @@ export default class AllTasks extends Component {
 							onChangeHandler = {this.onChangeHandler}
 							filterTasks = {this.filterTasks}
 							filterData = {this.state.tasksFilter}
+							loading = {this.setIsLoading}
 						/>
 						<table className="table">
 							<thead>

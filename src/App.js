@@ -14,7 +14,7 @@ import Dashboard from "./components/Dashboard"
 import Notification from "./components/Notification";
 import SampleLogin from "./components/SampleLogin";
 import SampleRegister from "./components/SampleRegister";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
@@ -49,6 +49,7 @@ function App() {
           <Route path="/notification" component = {Notification} />
           <Route path="/samplelogin" component = {() => <SampleLogin isLogged={isLogged} update = {updateIsLogged} />} />
           <Route path="/sampleregister" component = {SampleRegister} />
+          
         </main>
       </BrowserRouter>
     </div>

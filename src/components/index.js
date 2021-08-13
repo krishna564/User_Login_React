@@ -6,6 +6,7 @@ import EditUser from "./EditUser";
 import Nav from "./Nav";
 import Filter from "./Filter";
 import { Redirect } from "react-router-dom";
+import store from "../store/Store";
 
 export default class List extends Component {
 	constructor(props){
@@ -22,10 +23,7 @@ export default class List extends Component {
 				email:"",
 				username:"",
 			},
-			filterData:{
-				method:"",
-				value:"",
-			},
+			filterData:{},
 			msg:"",
 			editModal: false,
 			next_page:"",
@@ -203,11 +201,12 @@ export default class List extends Component {
 		};
 		axios.get("http://localhost:8000/list", config)
 		.then((response)=>{
+			// console.log(response.data.users);
 			this.setState({
-				users: response.data.users.data ? response.data.users.data : [],
+				users: response.data.users ? response.data.users : [],
 			})
 		}).catch((error)=>{
-			console.log(error.response);
+			console.log(error);
 		})
 	}
 
@@ -231,6 +230,29 @@ export default class List extends Component {
 		if(!localStorage.getItem('token')){
 			return (<Redirect to="/samplelogin" />)
 		}
+		const {user} = store.getState().user;
+		let action = [];
+		if (user.roles === 'Admin') {
+			action = (<th scope="col">Actions</th>);
+		}
+		let actionButtons = [];
+		if (user.roles === 'Admin') {
+			actionButtons = (
+				<td>
+					<button type="button" size="sm" className="btn btn-success button" onClick={() => this.toggleEdit(user.email, user.username)}>Edit</button>
+			        <button type="button" size="sm" className="btn btn-danger button" onClick={() => this.delete(user.id)}>Delete</button>
+			    </td>
+			    );
+		}
+		let addUserButton = [];
+		if (user.roles === 'Admin') {
+			addUserButton = (
+				<AddUser
+					addNewUser = {this.addNewUser}
+					newUserData = {this.state.newUserData}
+				 />
+			);
+		}
 		const { users } = this.state;
 		let userDetails = [];
 		if(users.length){
@@ -240,10 +262,7 @@ export default class List extends Component {
 						<td scope="row">{user.id}</td>
 						<td>{user.email}</td>
 						<td>{user.username}</td>
-						<td>
-							<button type="button" size="sm" className="btn btn-success button" onClick={() => this.toggleEdit(user.email, user.username)}>Edit</button>
-			                <button type="button" size="sm" className="btn btn-danger button" onClick={() => this.delete(user.id)}>Delete</button>
-						</td>
+						{actionButtons}
 					</tr>
 				);
 			});
@@ -264,10 +283,7 @@ export default class List extends Component {
 						filerUser = {this.filterUser}
 					/>
 				
-					<AddUser
-						addNewUser = {this.addNewUser}
-						newUserData = {this.state.newUserData}
-					 />
+					{addUserButton}
 
 					 <EditUser
 						EditUser = {this.EditUser}
@@ -286,7 +302,7 @@ export default class List extends Component {
 									<th scope="col">id</th>
 									<th scope="col">Email</th>
 									<th scope="col">Username</th>
-									<th scope="col">Actions</th>
+									{action}
 								</tr>
 							</thead>
 							<tbody>{userDetails}</tbody>

@@ -8,6 +8,7 @@ import MultiUpdateStatus from "./MultiUpdateStatus";
 import store from "../store/Store";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
+import Pusher from "pusher-js";
 
 class AsigneeTasks extends Component{
 
@@ -31,7 +32,7 @@ class AsigneeTasks extends Component{
 				to:"",
 				from:"",
 			},
-			multiSelectId: "",
+			multiSelectId: [],
 			multiSelectStatus: "",
 			multiSelectModal:false,
 		}
@@ -70,7 +71,6 @@ class AsigneeTasks extends Component{
 	}
 
 	multiUpdate = () => {
-		var id = this.state.multiSelectId.join(',');
 		const data = {
 			'id': this.state.multiSelectId,
 			'status': this.state.multiSelectStatus,
@@ -133,11 +133,34 @@ class AsigneeTasks extends Component{
 	}
 
 	render(){
+
+		// Pusher.logToConsole = true;
+	 //    var pusher = new Pusher('08a315f0306a89de6525', {
+	 //      cluster: 'ap2'
+	 //    });
+	 //    var name = 'my-channel';
+
+	 //    var channel = pusher.subscribe('my-channel');
+	 //    channel.bind('my-event', function(data) {
+	 //      alert(JSON.stringify(data));
+	 //      console.log(JSON.stringify(data));
+	 //    });
+
 		if(!localStorage.getItem('token')){
 			return (<Redirect to="/samplelogin" />)
 		}
 		const {assignee_tasks} = this.props;
 		// console.log(this.state.assignee_tasks);
+		let updateButton = []
+		if (this.state.multiSelectId.length) {
+			updateButton = (<MultiUpdateStatus 
+							update = {this.multiUpdate}
+							data = {this.setData}
+							modal = {this.state.multiSelectModal}
+							toggle = {this.multiSelectToggle}
+							loading = {this.setIsLoading}
+						/>)
+		}
 		let details = [];
 		if(assignee_tasks.length !== 0){
 			details = assignee_tasks.map((task)=>{
@@ -161,15 +184,7 @@ class AsigneeTasks extends Component{
 					<h3>Loading...</h3>
 				): (
 					<>
-
-						<MultiUpdateStatus 
-							update = {this.multiUpdate}
-							data = {this.setData}
-							modal = {this.state.multiSelectModal}
-							toggle = {this.multiSelectToggle}
-							loading = {this.setIsLoading}
-						/>
-
+						{updateButton}
 						<UpdateStatus
 							update = {this.statusUpdate}
 							data = {this.state.updateData}

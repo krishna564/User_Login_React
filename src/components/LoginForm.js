@@ -1,6 +1,19 @@
 import React from 'react';
-import {Field, reduxForm, SubmissionError} from "redux-form";
+import {Field, reduxForm, SubmissionError, stopSubmit} from "redux-form";
 import {Link} from "react-router-dom";
+
+const validate = values => {
+	const errors = {};
+	if (!values.email) {
+		errors.email = 'Required'
+	} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+		errors.email = 'Invalid Email Address'
+	}
+	if (!values.password) {
+		errors.password = 'Required'
+	}
+	return errors;
+}
 
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
   <div>
@@ -34,6 +47,7 @@ let LoginForm = (props) => {
 
 LoginForm = reduxForm({
 	form:'login',
+	validate,
 })(LoginForm)
 
 export default LoginForm;

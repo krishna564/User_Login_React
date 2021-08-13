@@ -1,4 +1,4 @@
-import { Link, Redirect } from "react-router-dom";
+import { NavLink, Redirect } from "react-router-dom";
 import axios from "axios";
 import store from "../store/Store";
 import { useState } from "react";
@@ -24,7 +24,7 @@ function Nav(props) {
 	let taskLink = [];
 	if(user.roles === 'Admin'){
 		taskLink = (<ul className="navbar-nav">
-		                <Link to="/alltasks" className="nav-link">All Tasks</Link>
+		                <NavLink to="/alltasks" className="nav-link">All Tasks</NavLink>
 		            </ul>)
 	}
 	if(!log){
@@ -34,21 +34,21 @@ function Nav(props) {
 		<nav className="navbar navbar-expand-md navbar-dark bg-dark mb-4">
 		  <div className="container-fluid">
 		        <div className="collapse navbar-collapse" id="navbarContent">
-		        	<ul className="navbar-nav ">
-		                <Link to="/" className="nav-link">Home</Link>
+		        	<ul className="navbar-nav">
+		                <NavLink to="/" exact activeClassName="active" className="nav-link">Home</NavLink>
 		            </ul>
 		            <ul className="navbar-nav">
-		                <Link to="/dashboard" className="nav-link">Dashboard</Link>
+		                <NavLink to="/dashboard" activeClassName="active" className="nav-link">Dashboard</NavLink>
 		            </ul>
 		            <ul className="navbar-nav">
-		                <Link to="/atasks" className="nav-link">Assigned Tasks</Link>
+		                <NavLink to="/atasks" activeClassName="active" className="nav-link">Assigned Tasks</NavLink>
 		            </ul>
 		            <ul className="navbar-nav">
-		                <Link to="/ctasks" className="nav-link">Created Tasks</Link>
+		                <NavLink to="/ctasks" activeClassName="active" className="nav-link">Created Tasks</NavLink>
 		            </ul>
 		            {taskLink}
 		            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-		                <Link to="/list" className="nav-link">Users</Link>
+		                <NavLink to="/list" activeClassName="active" className="nav-link">Users</NavLink>
 		            </ul>
 		            <ul className="navbar-nav">
 		                <li className="nav-item">

@@ -3,13 +3,31 @@ import Nav from "./Nav";
 import Charts from "./HighChart";
 import store from "../store/Store";
 import {Redirect} from "react-router-dom";
+import {assigneeTasks} from "../store/actions/UserActions";
+import { connect } from "react-redux";
 
-export default class Dashboard extends Component{
+class Dashboard extends Component{
 
 	constructor(props){
 		super(props);
 		this.state={
 			redirect:false,
+			set_dashboard: false,
+			isLoading:true,
+			assignee_tasks:[],
+		}
+	}
+
+	componentDidMount(){
+		this.props.assigneeTasks();
+	}
+
+	componentDidUpdate(){
+		if (!this.state.set_dashboard) {
+			this.setState({
+				set_dashboard:true,
+				isLoading:false,
+			})
 		}
 	}
 
@@ -23,8 +41,7 @@ export default class Dashboard extends Component{
 	render(){
 		var today = new Date();
 		var todayDate = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + (today.getDate());
-		console.log(today);
-		const {assignee_tasks} = store.getState().assignee_tasks;
+		const {assignee_tasks} = this.props;
 		let tasks = [];
 		let over_due = 0;
 		let completed = 0;
@@ -65,16 +82,31 @@ export default class Dashboard extends Component{
 		return(
 			<>
 				<Nav />
-				<Charts
-					over_due = {over_due}
-					assigned = {assigned}
-					completed = {completed}
-					in_progress = {in_progress}
-				/>
-				<div className="dashboard" onClick={this.setRedirect}>	
-					{tasks}
-				</div>
+				{this.state.isLoading ? (
+					<h3>Loading...</h3>
+				) : (
+					<>
+						<Charts
+							over_due = {over_due}
+							assigned = {assigned}
+							completed = {completed}
+							in_progress = {in_progress}
+						/>
+						<div className="dashboard" onClick={this.setRedirect}>	
+							{tasks}
+						</div>
+					</>
+				)}
+				
 			</>
 		);
 	}
 }
+const mapStateToProps = (state) => {
+	const { assignee_tasks } = state.assignee_tasks;
+	return {
+		assignee_tasks
+	};
+};
+
+export default connect(mapStateToProps,{assigneeTasks})(Dashboard);

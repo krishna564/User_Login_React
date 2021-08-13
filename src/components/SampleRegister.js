@@ -47,6 +47,7 @@ export default class SampleRegister extends Component{
 
 	render(){
 		if(this.state.redirect){
+			console.log('redirect');
 			return(<Redirect to='/samplelogin' />);
 		}
 		return (<RegisterForm onSubmit={this.submit}/>);

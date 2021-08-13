@@ -145,6 +145,13 @@ label {
 .card-button button:hover {
   opacity: 0.7;
 }
+ul a:hover {
+  color: #bd7137;
+}
+.active {
+  font-weight: bold;
+  color: #fff;
+}
 .delete{
   float: left;
   margin-left: 5px;
@@ -154,4 +161,7 @@ label {
 .highcharts{
   float: right;
   width: 50%;
+}
+.create_error{
+  color: red;
 }
